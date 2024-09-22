@@ -15,6 +15,11 @@ import adafruit_sdcard
 import storage
 import adafruit_pcf8523
 import alarm
+import json
+
+# Set up UART for Meshtastic
+# Note: Replace 'board.TX2' and 'board.RX2' with your actual secondary UART pins
+uart = busio.UART(board.TX2, board.RX2, baudrate=115200)
 
 # Set up I2C
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -75,6 +80,13 @@ def get_average_voltage(num_samples=10):
         time.sleep(0.01)
     return total / num_samples
  
+def send_meshtastic_message(message):
+    # Format the message as a JSON string
+    json_message = json.dumps({"text": message})
+    
+    # Send the message to the Meshtastic device
+    uart.write(b'!M' + json_message.encode() + b'\n')
+
 # Set the interval for data collection (in seconds)
 INTERVAL = 1.0
 
@@ -111,6 +123,9 @@ while True:
     # TODO: Get GPS data from gps or radio serial
     # can use spot trace data for post-processing
     print(output)
+
+    # send to radio
+    send_meshtastic_message(output)
     
     # Adjust gain if necessary
     if voltage > 2.5 and current_gain > 1:
