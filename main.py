@@ -81,11 +81,16 @@ def get_average_voltage(num_samples=10):
     return total / num_samples
  
 def send_meshtastic_message(message):
+    # This may not work, use simple send instead
+     
+    # simple send
+    uart.write(bytes(message, "ascii"))
+
     # Format the message as a JSON string
-    json_message = json.dumps({"text": message})
+    #json_message = json.dumps({"text": message})
     
     # Send the message to the Meshtastic device
-    uart.write(b'!M' + json_message.encode() + b'\n')
+    #uart.write(b'!M' + json_message.encode() + b'\n')
 
 # Set the interval for data collection (in seconds)
 INTERVAL = 1.0
@@ -118,8 +123,6 @@ while True:
         f.write(output + "\n")
     
     # Print to serial monitor
-    # TODO: Use second serial port
-    # TODO: Format for meshtastic or use protobufs
     # TODO: Get GPS data from gps or radio serial
     # can use spot trace data for post-processing
     print(output)
