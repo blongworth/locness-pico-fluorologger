@@ -73,15 +73,18 @@ def set_gain(gain):
         gain_100x.value = True
         current_gain = 100
 
-def get_average_voltage(num_samples=10):
+def get_average_voltage(num_samples=10, div_factor=0.66):
+    '''read voltage multiple times and average  
+       correct for voltage divider'''
     total = 0
     for _ in range(num_samples):
         total += chan.voltage
         time.sleep(0.01)
-    return total / num_samples
+    return total / num_samples * div_factor
  
 def send_meshtastic_message(message):
     # This may not work, use simple send instead
+    # Should use protobuf and/or send packet as json?
      
     # simple send
     uart.write(bytes(message, "ascii"))
