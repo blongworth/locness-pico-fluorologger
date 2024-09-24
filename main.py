@@ -97,9 +97,11 @@ def send_meshtastic_message(message):
 
 # Set the interval for data collection (in seconds)
 INTERVAL = 1.0
+SEND_INTERVAL = 60
 
 # Create a time alarm
 time_alarm = alarm.time.TimeAlarm(monotonic_time=time.monotonic() + INTERVAL)
+time_send = time.monotonic()
 
 # main loop
 while True:
@@ -131,7 +133,11 @@ while True:
     print(output)
 
     # send to radio
-    send_meshtastic_message(output)
+    # send only once per minute or so
+    # send on first run
+    if time.monotonic() >= time_send: 
+        send_meshtastic_message(output)
+        time_send = time.monotonic() + SEND_INTERVAL
     
     # Adjust gain if necessary
     if voltage > 2.5 and current_gain > 1:
