@@ -6,8 +6,8 @@
 # control fluormeter gain
  
 import time
-import board
 import busio
+import board
 import digitalio
 import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
@@ -19,10 +19,10 @@ import json
 
 # Set up UART for Meshtastic
 # Note: Replace 'board.TX2' and 'board.RX2' with your actual secondary UART pins
-uart = busio.UART(board.TX2, board.RX2, baudrate=115200)
+uart = busio.UART(board.TX, board.RX, baudrate=115200)
 
 # Set up I2C
-i2c = busio.I2C(board.SCL, board.SDA)
+i2c = busio.I2C(scl=board.D5, sda=board.D4)
 
 # Set up ADS1115
 ads = ADS.ADS1115(i2c)
